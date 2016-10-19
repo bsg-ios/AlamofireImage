@@ -166,7 +166,7 @@ public class ImageDownloader {
     public init(
         configuration: NSURLSessionConfiguration = ImageDownloader.defaultURLSessionConfiguration(),
         downloadPrioritization: DownloadPrioritization = .FIFO,
-        maximumActiveDownloads: Int = 1,
+        maximumActiveDownloads: Int = 4,
         imageCache: ImageRequestCache? = AutoPurgingImageCache())
     {
         self.sessionManager = Alamofire.Manager(configuration: configuration)
@@ -191,7 +191,7 @@ public class ImageDownloader {
     public init(
         sessionManager: Manager,
         downloadPrioritization: DownloadPrioritization = .FIFO,
-        maximumActiveDownloads: Int = 1,
+        maximumActiveDownloads: Int = 4,
         imageCache: ImageRequestCache? = AutoPurgingImageCache())
     {
         self.sessionManager = sessionManager
@@ -272,15 +272,6 @@ public class ImageDownloader {
         var request: Request!
 
         dispatch_sync(synchronizationQueue) {
-            // 0) fix for requests for which didComplete was not called
-            let keyValueToRemove = self.responseHandlers.filter { $0.1.request.task.state == .Completed && $0.1.request.endTime == nil }
-            for keyValue in keyValueToRemove {
-                self.responseHandlers.removeValueForKey(keyValue.0)
-                if self.activeRequestCount > 0 {
-                    self.activeRequestCount -= 1
-                }
-            }
-            
             // 1) Append the filter and completion handler to a pre-existing request if it already exists
             let urlID = ImageDownloader.urlIdentifierForURLRequest(URLRequest)
 
