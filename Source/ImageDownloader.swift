@@ -166,7 +166,7 @@ public class ImageDownloader {
     public init(
         configuration: NSURLSessionConfiguration = ImageDownloader.defaultURLSessionConfiguration(),
         downloadPrioritization: DownloadPrioritization = .FIFO,
-        maximumActiveDownloads: Int = 4,
+        maximumActiveDownloads: Int = 1000000,
         imageCache: ImageRequestCache? = AutoPurgingImageCache())
     {
         self.sessionManager = Alamofire.Manager(configuration: configuration)
@@ -191,7 +191,7 @@ public class ImageDownloader {
     public init(
         sessionManager: Manager,
         downloadPrioritization: DownloadPrioritization = .FIFO,
-        maximumActiveDownloads: Int = 4,
+        maximumActiveDownloads: Int = 1000000,
         imageCache: ImageRequestCache? = AutoPurgingImageCache())
     {
         self.sessionManager = sessionManager
